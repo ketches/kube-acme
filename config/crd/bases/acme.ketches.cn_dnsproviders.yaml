@@ -1,0 +1,54 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.3
+  creationTimestamp: null
+  name: dnsproviders.acme.ketches.cn
+spec:
+  group: acme.ketches.cn
+  names:
+    kind: DNSProvider
+    listKind: DNSProviderList
+    plural: dnsproviders
+    singular: dnsprovider
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: DNSProvider is the Schema for the dnsproviders API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DNSProviderSpec defines the desired state of DNSProvider
+            properties:
+              code:
+                type: string
+              email:
+                type: string
+              keys:
+                additionalProperties:
+                  type: string
+                type: object
+            type: object
+          status:
+            description: DNSProviderStatus defines the observed state of DNSProvider
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

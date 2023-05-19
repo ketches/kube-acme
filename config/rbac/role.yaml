@@ -1,0 +1,59 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - acme.ketches.cn
+  resources:
+  - certificaterequests
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - acme.ketches.cn
+  resources:
+  - certificaterequests/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - acme.ketches.cn
+  resources:
+  - certificaterequests/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - acme.ketches.cn
+  resources:
+  - dnsproviders
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - acme.ketches.cn
+  resources:
+  - dnsproviders/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - acme.ketches.cn
+  resources:
+  - dnsproviders/status
+  verbs:
+  - get
+  - patch
+  - update

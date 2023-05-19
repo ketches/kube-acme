@@ -1,0 +1,27 @@
+# permissions for end users to view dnsproviders.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: dnsprovider-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: kube-acme
+    app.kubernetes.io/part-of: kube-acme
+    app.kubernetes.io/managed-by: kustomize
+  name: dnsprovider-viewer-role
+rules:
+- apiGroups:
+  - acme.ketches.cn
+  resources:
+  - dnsproviders
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - acme.ketches.cn
+  resources:
+  - dnsproviders/status
+  verbs:
+  - get

@@ -1,0 +1,5 @@
+## Append samples of your project ##
+resources:
+- acme_v1alpha1_dnsprovider.yaml
+- acme_v1alpha1_certificaterequest.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples

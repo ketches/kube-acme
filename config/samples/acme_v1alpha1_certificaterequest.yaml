@@ -1,0 +1,12 @@
+apiVersion: acme.ketches.cn/v1alpha1
+kind: CertificateRequest
+metadata:
+  labels:
+    app.kubernetes.io/name: certificaterequest
+    app.kubernetes.io/instance: certificaterequest-sample
+    app.kubernetes.io/part-of: kube-acme
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: kube-acme
+  name: certificaterequest-sample
+spec:
+  # TODO(user): Add fields here
