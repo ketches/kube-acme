@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test002
+  labels:
+    name: test002
+  annotations:
+    kube-acme.ketches.cn/dns-provider: cloudflare001
+spec:
+  tls:
+  - hosts:
+    - test002.kube-acme.ketches.cn
+    secretName: test002-tls
+  rules:
+  - host: test002.kube-acme.ketches.cn
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: nginx
+            port: 
+              number: 80
