@@ -1,5 +1,6 @@
 
-TAG ?= latest
+TAG ?= v0.0.1
+
 # Image URL to use all building/pushing image targets
 IMG ?= ketches/kube-acme:${TAG}
 ACR_IMG ?= registry.cn-hangzhou.aliyuncs.com/ketches/kube-acme:${TAG}
