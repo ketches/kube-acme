@@ -27,26 +27,26 @@ import (
 	acmev1alpha1 "github.com/ketches/kube-acme/api/acme/v1alpha1"
 )
 
-// DNSProviderReconciler reconciles a DNSProvider object
-type DNSProviderReconciler struct {
+// IssuerReconciler reconciles a Issuer object
+type IssuerReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=acme.ketches.cn,resources=dnsproviders,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=acme.ketches.cn,resources=dnsproviders/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=acme.ketches.cn,resources=dnsproviders/finalizers,verbs=update
+//+kubebuilder:rbac:groups=acme.ketches.cn,resources=issuers,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=acme.ketches.cn,resources=issuers/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=acme.ketches.cn,resources=issuers/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
-// the DNSProvider object against the actual cluster state, and then
+// the Issuer object against the actual cluster state, and then
 // perform operations to make the cluster state reflect the state specified by
 // the user.
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.4/pkg/reconcile
-func (r *DNSProviderReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *IssuerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
 	// TODO(user): your logic here
@@ -55,8 +55,8 @@ func (r *DNSProviderReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *DNSProviderReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *IssuerReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&acmev1alpha1.DNSProvider{}).
+		For(&acmev1alpha1.Issuer{}).
 		Complete(r)
 }

@@ -1,31 +1,27 @@
-# permissions for end users to edit certificaterequests.
+# permissions for end users to view certificates.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: clusterrole
-    app.kubernetes.io/instance: certificaterequest-editor-role
+    app.kubernetes.io/instance: certificate-viewer-role
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: kube-acme
     app.kubernetes.io/part-of: kube-acme
     app.kubernetes.io/managed-by: kustomize
-  name: certificaterequest-editor-role
+  name: certificate-viewer-role
 rules:
 - apiGroups:
   - acme.ketches.cn
   resources:
-  - certificaterequests
+  - certificates
   verbs:
-  - create
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
 - apiGroups:
   - acme.ketches.cn
   resources:
-  - certificaterequests/status
+  - certificates/status
   verbs:
   - get

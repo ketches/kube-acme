@@ -1,21 +1,24 @@
 apiVersion: acme.ketches.cn/v1alpha1
-kind: DNSProvider
+kind: Issuer
 metadata:
   name: cloudflare001
 spec:
-  code: cloudflare
-  email: dev@ketches.cn
+  solver: cloudflare
+  email: test.kube-acme@ketches.cn
   keys: 
-    CLOUDFLARE_DNS_API_TOKEN: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    # CLOUDFLARE_DNS_API_TOKEN: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    CLOUDFLARE_DNS_API_TOKEN: 7W0shpGJWVkzEaqhPeheT9LXhewzSnOWd7qiYaCd
+
 ---
 apiVersion: acme.ketches.cn/v1alpha1
-kind: CertificateRequest
+kind: Certificate
 metadata:
-  name: test001
+  name: test001-tls
 spec:
-  dns: cloudflare001
+  issuer: cloudflare001
   secretName: test001-tls
-  domain: test001.kube-acme.ketches.cn
+  domains: 
+  - test001.kube-acme.ketches.cn
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -24,6 +27,7 @@ metadata:
   labels:
     name: test001
 spec:
+  ingressClassName: nginx
   tls:
   - hosts:
     - test001.kube-acme.ketches.cn

@@ -6,8 +6,9 @@ metadata:
   labels:
     name: test002
   annotations:
-    kube-acme.ketches.cn/dns-provider: cloudflare001
+    kube-acme.ketches.cn/issuer: cloudflare001
 spec:
+  ingressClassName: nginx
   tls:
   - hosts:
     - test002.kube-acme.ketches.cn

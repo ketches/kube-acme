@@ -5,21 +5,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.3
   creationTimestamp: null
-  name: certificaterequests.acme.ketches.cn
+  name: issuers.acme.ketches.cn
 spec:
   group: acme.ketches.cn
   names:
-    kind: CertificateRequest
-    listKind: CertificateRequestList
-    plural: certificaterequests
-    singular: certificaterequest
+    kind: Issuer
+    listKind: IssuerList
+    plural: issuers
+    singular: issuer
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: CertificateRequest is the Schema for the certificaterequests
-          API
+        description: Issuer is the Schema for the issuers API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -34,33 +33,19 @@ spec:
           metadata:
             type: object
           spec:
-            description: CertificateRequestSpec defines the desired state of CertificateRequest
+            description: IssuerSpec defines the desired state of Issuer
             properties:
-              dns:
+              email:
                 type: string
-              domain:
-                type: string
-              secretName:
+              keys:
+                additionalProperties:
+                  type: string
+                type: object
+              solver:
                 type: string
             type: object
           status:
-            description: CertificateRequestStatus defines the observed state of CertificateRequest
-            properties:
-              conditions:
-                items:
-                  properties:
-                    message:
-                      type: string
-                    reason:
-                      type: string
-                    status:
-                      type: string
-                    type:
-                      type: string
-                  type: object
-                type: array
-              phase:
-                type: string
+            description: IssuerStatus defines the observed state of Issuer
             type: object
         type: object
     served: true

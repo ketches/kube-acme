@@ -20,10 +20,12 @@ import (
 	"context"
 
 	acmev1alpha1 "github.com/ketches/kube-acme/api/acme/v1alpha1"
+	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
+	"k8s.io/utils/strings/slices"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -55,7 +57,7 @@ func (r *IngressReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
-	provider, ok := ingress.Annotations["kube-acme.ketches.cn/dns-provider"]
+	issuerName, ok := ingress.Annotations["kube-acme.ketches.cn/issuer"]
 	if !ok {
 		return ctrl.Result{}, nil
 	}
@@ -64,29 +66,46 @@ func (r *IngressReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		return ctrl.Result{}, nil
 	}
 
-	domain := ingress.Spec.TLS[0].Hosts[0]
+	domains := ingress.Spec.TLS[0].Hosts
 
-	dnsProvider := &acmev1alpha1.DNSProvider{}
-	if err := r.Get(ctx, types.NamespacedName{Namespace: ingress.Namespace, Name: provider}, dnsProvider); err != nil {
-		klog.Errorf("Failed to get DNSProvider [%s]: %s", client.ObjectKeyFromObject(dnsProvider), err)
+	issuer := &acmev1alpha1.Issuer{}
+	if err := r.Get(ctx, types.NamespacedName{Namespace: ingress.Namespace, Name: issuerName}, issuer); err != nil {
+		klog.Errorf("Failed to get Issuer [%s]: %s", client.ObjectKeyFromObject(issuer), err)
 		return ctrl.Result{}, err
 	}
 
-	cr := &acmev1alpha1.CertificateRequest{
+	desiredCert := &acmev1alpha1.Certificate{
 		ObjectMeta: metav1.ObjectMeta{
 			Namespace: ingress.Namespace,
 			Name:      ingress.Spec.TLS[0].SecretName,
+			OwnerReferences: []metav1.OwnerReference{
+				*metav1.NewControllerRef(ingress, ingress.GroupVersionKind()),
+			},
 		},
-		Spec: acmev1alpha1.CertificateRequestSpec{
-			Domain:         domain,
-			SecretName:     ingress.Spec.TLS[0].SecretName,
-			DNSProviderRef: provider,
+		Spec: acmev1alpha1.CertificateSpec{
+			Domains:    domains,
+			SecretName: ingress.Spec.TLS[0].SecretName,
+			Issuer:     issuerName,
 		},
 	}
 
-	if err := r.Create(ctx, cr); err != nil {
-		klog.Errorf("Failed to create CertificateRequest [%s]: %s", client.ObjectKeyFromObject(cr), err)
-		return ctrl.Result{}, err
+	currentCert := &acmev1alpha1.Certificate{}
+	if err := r.Get(ctx, client.ObjectKeyFromObject(desiredCert), currentCert); err != nil {
+		if k8serrors.IsNotFound(err) {
+			// Create certificate
+			if err := r.Create(ctx, desiredCert); err != nil {
+				klog.Errorf("Failed to create Certificate [%s]: %s", client.ObjectKeyFromObject(desiredCert), err)
+				return ctrl.Result{}, err
+			}
+		} else {
+			if !slices.Equal(desiredCert.Spec.Domains, currentCert.Spec.Domains) || desiredCert.Spec.Issuer != currentCert.Spec.Issuer {
+				// Update certificate
+				if err := r.Update(ctx, desiredCert); err != nil {
+					klog.Errorf("Failed to update Certificate [%s]: %s", client.ObjectKeyFromObject(desiredCert), err)
+					return ctrl.Result{}, err
+				}
+			}
+		}
 	}
 
 	return ctrl.Result{}, nil

@@ -23,26 +23,26 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// DNSProviderSpec defines the desired state of DNSProvider
-type DNSProviderSpec struct {
+// IssuerSpec defines the desired state of Issuer
+type IssuerSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	Code  DNSProviderCode   `json:"code,omitempty"`
-	Email string            `json:"email,omitempty"`
-	Keys  map[string]string `json:"keys,omitempty"`
+	Solver Solver            `json:"solver,omitempty"`
+	Email  string            `json:"email,omitempty"`
+	Keys   map[string]string `json:"keys,omitempty"`
 }
 
-type DNSProviderCode string
+type Solver string
 
 const (
-	Cloudflare   DNSProviderCode = "cloudflare"
-	AliDNS       DNSProviderCode = "alidns"
-	TencentCloud DNSProviderCode = "tencentcloud"
+	Cloudflare   Solver = "cloudflare"
+	AliDNS       Solver = "alidns"
+	TencentCloud Solver = "tencentcloud"
 )
 
-// DNSProviderStatus defines the observed state of DNSProvider
-type DNSProviderStatus struct {
+// IssuerStatus defines the observed state of Issuer
+type IssuerStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
@@ -51,24 +51,24 @@ type DNSProviderStatus struct {
 //+kubebuilder:subresource:status
 // +genclient
 
-// DNSProvider is the Schema for the dnsproviders API
-type DNSProvider struct {
+// Issuer is the Schema for the issuers API
+type Issuer struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   DNSProviderSpec   `json:"spec,omitempty"`
-	Status DNSProviderStatus `json:"status,omitempty"`
+	Spec   IssuerSpec   `json:"spec,omitempty"`
+	Status IssuerStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// DNSProviderList contains a list of DNSProvider
-type DNSProviderList struct {
+// IssuerList contains a list of Issuer
+type IssuerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []DNSProvider `json:"items"`
+	Items           []Issuer `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&DNSProvider{}, &DNSProviderList{})
+	SchemeBuilder.Register(&Issuer{}, &IssuerList{})
 }

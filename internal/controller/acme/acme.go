@@ -83,7 +83,7 @@ func NewClient(user *User, provider *DNSProvider) *AcmeClient {
 	}
 }
 
-func (c *AcmeClient) ObtainCertificate(domain string) (*certificate.Resource, error) {
+func (c *AcmeClient) ObtainCertificate(domains []string) (*certificate.Resource, error) {
 	c.setenvs()
 
 	provider, err := dns.NewDNSChallengeProviderByName(c.DomainProvider.Name)
@@ -103,7 +103,7 @@ func (c *AcmeClient) ObtainCertificate(domain string) (*certificate.Resource, er
 	c.user.Registration = reg
 
 	request := certificate.ObtainRequest{
-		Domains: []string{domain},
+		Domains: domains,
 		Bundle:  true,
 	}
 

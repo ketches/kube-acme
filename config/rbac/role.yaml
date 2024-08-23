@@ -8,7 +8,7 @@ rules:
 - apiGroups:
   - acme.ketches.cn
   resources:
-  - certificaterequests
+  - certificates
   verbs:
   - create
   - delete
@@ -20,13 +20,13 @@ rules:
 - apiGroups:
   - acme.ketches.cn
   resources:
-  - certificaterequests/finalizers
+  - certificates/finalizers
   verbs:
   - update
 - apiGroups:
   - acme.ketches.cn
   resources:
-  - certificaterequests/status
+  - certificates/status
   verbs:
   - get
   - patch
@@ -34,7 +34,7 @@ rules:
 - apiGroups:
   - acme.ketches.cn
   resources:
-  - dnsproviders
+  - issuers
   verbs:
   - create
   - delete
@@ -46,13 +46,13 @@ rules:
 - apiGroups:
   - acme.ketches.cn
   resources:
-  - dnsproviders/finalizers
+  - issuers/finalizers
   verbs:
   - update
 - apiGroups:
   - acme.ketches.cn
   resources:
-  - dnsproviders/status
+  - issuers/status
   verbs:
   - get
   - patch
